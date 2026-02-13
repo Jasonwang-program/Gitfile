@@ -7,9 +7,9 @@ ex：站點名稱、地址、可借車量數、已借出車量數、資料更新
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>台北市 YouBike 站點資訊</title>
-        <link rel="stylesheet" href="css/bootstrap.bundle.min.css" />
-        <link rel="stylesheet" href="css/My Textured color scheme.css" />
-        <link rel="stylesheet" href="css/table-rwd.css" />
+        <link rel="stylesheet" href="../css/bootstrap.bundle.min.css" />
+        <link rel="stylesheet" href="../css/My Textured color scheme.css" />
+        <link rel="stylesheet" href="../css/table-rwd.css" />
         <style></style>
     </head>
 
@@ -38,14 +38,14 @@ ex：站點名稱、地址、可借車量數、已借出車量數、資料更新
             </table>
         </div>
 
-        <script src="js/jquery-4.0.0.js"></script>
-        <script src="js/bootstrap.bundle.min.js"></script>
+        <script src="../js/jquery-4.0.0.js"></script>
+        <script src="../js/bootstrap.bundle.min.js"></script>
         <script>
             // 主程式，讀取 YouBike opendata 並顯示資料
             $(function () {
                 $.ajax({
                     type: 'GET',
-                    url: 'js/youbike_immediate.json',
+                    url: '../js/youbike_immediate.json',
                     dataType: 'json',
                     success: showdata,
                     error: function () {
