@@ -30,7 +30,7 @@
         </header>
 
         <main>
-            <!-- Hero -->
+            <!-- 主視覺區 -->
             <section class="hero">
                 <div class="container hero__grid">
                     <div class="hero__media">
@@ -75,7 +75,7 @@
                 </div>
             </section>
 
-            <!-- Portfolio -->
+            <!-- 資料夾 -->
             <section id="portfolio" class="section section--alt">
                 <div class="container">
                     <div class="section__head">
@@ -109,7 +109,7 @@
                 </div>
             </section>
 
-            <!-- Links -->
+            <!-- 連結 -->
             <section id="links" class="section">
                 <div class="container">
                     <h2 class="section__title">連結</h2>
@@ -139,7 +139,7 @@
             </section>
         </main>
 
-        <!-- Theme Switcher (右下角面板) -->
+        <!-- 主題切換器 (右下角面板) -->
         <div class="theme-panel" id="themePanel">
             <button class="theme-panel__toggle" id="themeToggle" type="button" aria-label="Theme menu">🎨</button>
 
@@ -337,7 +337,7 @@
                 python: '🐍',
                 other: '📦',
             }
-            // ========= utils =========
+            // ========= 工具函式/小工具 =========
             const $ = (sel) => document.querySelector(sel)
             const escapeHtml = (s) =>
                 String(s).replace(
@@ -402,7 +402,7 @@
                 root.innerHTML = blocks || `<div class="empty">找不到符合的作品。試試看換個關鍵字或切換類別。</div>`
             }
 
-            // ========= init =========
+            // ========= 初始化 =========
             document.getElementById('y').textContent = new Date().getFullYear()
 
             const chips = Array.from(document.querySelectorAll('.chip'))
@@ -426,7 +426,7 @@
 
             render({ tagFilter: 'all', q: '' })
 
-            // ===== Theme Switcher =====
+            // ===== 主題切換器 =====
             ;(() => {
                 const THEMES = ['theme-warm', 'theme-light', 'theme-night']
                 const storageKey = 'site_theme'

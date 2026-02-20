@@ -340,3 +340,15 @@
     color: rgba(255, 255, 255, 0.65);
     font-size: 12px;
 }
+
+/* 標籤圖示+標籤 */
+.pitem__tag {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.tagicon {
+    font-size: 12px;
+    line-height: 1;
+}
