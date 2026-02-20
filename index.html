@@ -42,7 +42,7 @@
                         <p class="hero__subtitle">單親爸爸認真負責</p>
 
                         <p class="hero__desc">
-                            雞大大信箱個人說明體驗矛盾工作版面規定眾多真是，巴別的桌面女士，很上路打電話判斷新鮮收益最大看看塑膠，大股票很少群發和平數字表明神秘兩個，又補充類似交流四周難以我一解壓密碼漸漸廣告年輕人重要學生，長姓名不敢暫時我來經濟還不位於幾乎請大家促進就業，有個尤其是瀏覽風情裡面程式十年完全攝影大家你說讓我們，全新家園樣子你就數字，具有各位情形福州理論禮品美麗我去參考這個需求，三。
+                            雞大大信箱個人說明體驗矛盾工作版面規定眾多真是，雞別的桌面女士，很上路打電話判斷新鮮收益最大看看塑膠，大股票很少群發和平數字表明神秘兩個，又補充類似交流四周難以我一解壓密碼漸漸廣告年輕人重要學生，長姓名不敢暫時我來經濟還不位於幾乎請大家促進就業，有個尤其是瀏覽風情裡面程式十年完全攝影大家你說讓我們，全新家園樣子你就數字，具有各位情形福州理論禮品美麗我去參考這個需求，三。
                         </p>
 
                         <div class="hero__actions">
@@ -191,7 +191,7 @@
                         {
                             title: '20260122-學員練習_執行_插入圖片',
                             desc: '圖片插入練習',
-                            href: 'classwork/20260122-學員練習_執行_插入圖片.html',
+                            href: 'classwork/20260122-學員練習_換行_插入圖片.html',
                             keywords: ['img', 'HTML'],
                         },
 
@@ -249,7 +249,7 @@
                         {
                             title: '20260210-Ch6_欄與列（切版）',
                             desc: '欄列與切版練習',
-                            href: 'classwork/20260210-Ch6_欄與列_(切版).html',
+                            href: 'classwork/20260210-Ch6_欄與列_切版.html',
                             keywords: ['grid', '切版'],
                         },
                         {
@@ -294,7 +294,7 @@
                         {
                             title: '20260212-Ch6_地方美食列表綜合練習',
                             desc: 'JSON → 卡片渲染',
-                            href: 'classwork/20260212-Ch6_地方美食列表綜合練習.html',
+                            href: 'classwork/20260212-Ch6_ 地方美食列表綜合練習.html',
                             keywords: ['forEach', 'DOM', '卡片'],
                         },
                     ],
@@ -322,6 +322,21 @@
                 },
             ]
 
+            const tagLabelMap = {
+                htmlcss: 'HTML / CSS',
+                js: 'JavaScript',
+                php: 'PHP / Laravel',
+                python: 'Python',
+                other: 'Other',
+            }
+
+            const tagIconMap = {
+                htmlcss: '🧱',
+                js: '🟨',
+                php: '🐘',
+                python: '🐍',
+                other: '📦',
+            }
             // ========= utils =========
             const $ = (sel) => document.querySelector(sel)
             const escapeHtml = (s) =>
@@ -356,7 +371,10 @@
               <a class="pitem" href="${escapeHtml(it.href)}" target="_blank" rel="noopener">
                 <div class="pitem__top">
                   <div class="pitem__title">${escapeHtml(it.title)}</div>
-                  <div class="pitem__tag">${escapeHtml(cat.tag)}</div>
+                  <div class="pitem__tag">
+                  <span class="tagicon">${escapeHtml(tagIconMap[cat.tag] || '🏷️')}</span>
+                  <span>${escapeHtml(tagLabelMap[cat.tag] || cat.tag)}</span>
+                </div>
                 </div>
                 <div class="pitem__desc">${escapeHtml(it.desc || '')}</div>
                 <div class="pitem__meta">${escapeHtml((it.keywords || []).join(' · '))}</div>

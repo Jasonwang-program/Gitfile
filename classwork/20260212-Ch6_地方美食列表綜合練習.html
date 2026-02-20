@@ -4,9 +4,9 @@
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <title>Ch6. 地方美食列表</title>
-        <link rel="stylesheet" href="css/bootstrap.min.css" />
-        <link rel="stylesheet" href="css/table-rwd.css" />
-        <link rel="stylesheet" href="css/My style.css" />
+        <link rel="stylesheet" href="../css/bootstrap.min.css" />
+        <link rel="stylesheet" href="../css/table-rwd.css" />
+        <link rel="stylesheet" href="../css/My style.css" />
         <style>
             .Contents-01 {
                 padding: 10px;
@@ -25,13 +25,13 @@
                 <div class="row g-4 Contents-01"></div>
             </div>
 
-            <script src="js/bootstrap.bundle.min.js"></script>
-            <script src="js/jquery-4.0.0.js"></script>
+            <script src="../js/bootstrap.bundle.min.js"></script>
+            <script src="../js/jquery-4.0.0.js"></script>
             <script>
                 $(function () {
                     $.ajax({
                         type: 'GET',
-                        url: 'js/TravelFood.json',
+                        url: '../js/TravelFood.json',
                         dataType: 'json',
                         success: showdata,
                         error: function () {
