@@ -1,0 +1,528 @@
+﻿<!doctype html>
+<html lang="zh-TW">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ch11_表單</title>
+
+        <!-- 你原本的 CSS 引用：保留 -->
+        <link rel="stylesheet" href="../css/bootstrap.min.css" />
+        <link rel="stylesheet" href="../css/01_tokens.css" />
+        <link rel="stylesheet" href="../css/02_typography.css" />
+        <link rel="stylesheet" href="../css/03_components.css" />
+        <link rel="stylesheet" href="../css/04_layout.css" />
+    </head>
+
+    <body>
+        <div class="container pb-5">
+            <div class="display-3 p-3 my-4 fw-900 text-primary">Ch11_表單相關應用</div>
+
+            <!-- =========================
+                1) 表單樣式 (form)
+                - 這段用 form submit 觸發
+                - 你要練習 console.log，所以 submit 時會 preventDefault() 不讓它真的送出
+                ========================= -->
+            <div class="h2 py-3 fw-900 text-secondary">1. 表單樣式(form)</div>
+            <div class="row">
+                <div class="col-12">
+                    <form id="myForm01">
+                        <div class="mb-3">
+                            <label for="username01" class="form-label">帳號</label>
+                            <!-- 初學者提醒：一開始不要先寫 is-valid，不然看起來綠色但 flag 其實仍是 false -->
+                            <input type="text" class="form-control" id="username01" placeholder="帳號字數2~6！" />
+                            <div class="valid-feedback">輸入符合規定</div>
+                            <div class="invalid-feedback">輸入不符合規定</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password01" class="form-label">密碼</label>
+                            <input type="password" class="form-control" id="password01" placeholder="密碼字數2~8！" />
+                            <div class="valid-feedback">輸入符合規定</div>
+                            <div class="invalid-feedback">輸入不符合規定</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email01" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email01" placeholder="Email字數2~12！" />
+                            <div class="valid-feedback">輸入符合規定</div>
+                            <div class="invalid-feedback">輸入不符合規定</div>
+                        </div>
+
+                        <!-- type="submit"：按下去會觸發 form 的 submit 事件 -->
+                        <button type="submit" class="btn btn-primary">送出</button>
+                    </form>
+                </div>
+            </div>
+
+            <hr class="my-5" />
+
+            <!-- =========================
+                2) 表單樣式 (用按鈕 click，不走 submit)
+                - 你仍然把 input 包在 form 裡也沒問題
+                - 但按鈕用 type="button"，所以不會觸發 submit，只會觸發 click
+                ========================= -->
+            <div class="h2 py-3 fw-900 text-secondary">2. 表單樣式(不使用 submit，改用按鈕 click)</div>
+            <div class="row">
+                <div class="col-12">
+                    <form id="myForm02">
+                        <div class="mb-3">
+                            <label for="username02" class="form-label">帳號</label>
+                            <input type="text" class="form-control" id="username02" placeholder="帳號字數2~6！" />
+                            <div class="valid-feedback">輸入符合規定</div>
+                            <div class="invalid-feedback">輸入不符合規定</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="password02" class="form-label">密碼</label>
+                            <input type="password" class="form-control" id="password02" placeholder="密碼字數2~8！" />
+                            <div class="valid-feedback">輸入符合規定</div>
+                            <div class="invalid-feedback">輸入不符合規定</div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="email02" class="form-label">Email</label>
+                            <input type="email" class="form-control" id="email02" placeholder="Email字數2~12！" />
+                            <div class="valid-feedback">輸入符合規定</div>
+                            <div class="invalid-feedback">輸入不符合規定</div>
+                        </div>
+
+                        <!-- type="button"：不會送出表單，只做 click 事件 -->
+                        <button type="button" class="btn btn-primary" id="btn02">送出</button>
+                    </form>
+                </div>
+            </div>
+
+            <hr class="my-5" />
+
+            <!-- =========================
+                3) select 下拉選單：縣市 + 餐點
+                - 縣市：手動 option
+                - 餐點：用 JS 的 foodData 自動渲染 option
+                ========================= -->
+            <div class="h2 py-3 fw-900 text-secondary">3. select</div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label for="myCity" class="form-label">縣市</label>
+                        <select id="myCity" class="form-select form-select-lg">
+                            <option value="" class="text-center" disabled selected>***請選擇縣市***</option>
+                            <option value="taipei">台北</option>
+                            <option value="taichung">台中</option>
+                            <option value="kaohsiung">高雄</option>
+                        </select>
+                    </div>
+
+                    <div class="mb-3">
+                        <label for="myFood" class="form-label">餐點選單練習(select)</label>
+
+                        <!-- 初學者提醒：id 必須唯一，餐點 select 用 myFood -->
+                        <select id="myFood" class="form-select form-select-lg">
+                            <!-- 這裡會被 JS empty() 後重新渲染，所以先放一個提示也行 -->
+                            <option value="" class="text-center" disabled selected>***請選擇餐點***</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <hr class="my-5" />
+
+            <!-- =========================
+                4) range 滑桿
+                - input[type=range] 本身顯示不會更新文字
+                - 你要把值寫到旁邊的 span#num_text
+                ========================= -->
+            <div class="h2 py-3 fw-900 text-secondary">4. range</div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-3">
+                        <label for="num" class="form-label">數量</label>
+                        數量：<span class="text-success h2 fw-900" id="num_text">50</span>個
+                        <input type="range" class="form-range" id="num" min="0" max="100" value="50" />
+                    </div>
+                </div>
+            </div>
+
+            <hr class="mt-5" />
+            <div class="h2 py-3 fw-900 text-secondary">5. Datalist(串接後端推薦熱門食物)</div>
+            <div class="row">
+                <div class="mb-3">
+                    <label for="" class="form-label">美食紀錄</label>
+                    <input type="text" class="form-control" list="foodlist" />
+                    <datalist id="foodlist">
+                        <option value="雞腿飯"></option>
+                        <option value="牛肉麵"></option>
+                        <option value="越南河粉"></option>
+                        <option value="日本壽司"></option>
+                        <option value="溫蒂漢堡"></option>
+                    </datalist>
+                </div>
+            </div>
+
+            <hr class="mt-5" />
+            <div class="h2 py-3 fw-900 text-secondary">6. Checkbox</div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input type="checkbox" name="sport" class="form-check-input" value="跑步" />
+                        <label for="" class="form-check-label">跑步</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="sport" class="form-check-input" value="游泳" />
+                        <label for="" class="form-check-label">游泳</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="sport" class="form-check-input" value="爬山" />
+                        <label for="" class="form-check-label">爬山</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" name="sport" class="form-check-input" value="重訓" />
+                        <label for="" class="form-check-label">重訓</label>
+                    </div>
+                    <button class="btn btn-success my-3" id="btn06">確認</button>
+                </div>
+            </div>
+
+            <hr class="mt-5" />
+            <div class="h2 py-3 fw-900 text-secondary">7. radio(單選)</div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="form-check">
+                        <input type="radio" name="edu" class="form-check-input" value="研究所" />
+                        <label for="" class="form-check-label">研究所</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" name="edu" class="form-check-input" value="大學" />
+                        <label for="" class="form-check-label">大學</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" name="edu" class="form-check-input" value="高中職" />
+                        <label for="" class="form-check-label">高中職</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="radio" name="edu" class="form-check-input" value="其它" />
+                        <label for="" class="form-check-label">其它</label>
+                    </div>
+                    <button class="btn btn-success my-3" id="btn07">確認</button>
+                </div>
+            </div>
+
+            <hr class="mt-5" />
+            <div class="h2 py-3 fw-900 text-secondary">8. floating(漂浮表單)</div>
+            <div class="row">
+                <div class="col-12">
+                    <div class="mb-3">
+                        <input type="text" class="form-control" name="" id="" placeholder="" />
+                        <label for="" class="form-label">帳號</label>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JS 套件：Bootstrap + jQuery -->
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script src="../js/jquery-4.0.0.js"></script>
+
+        <script>
+            // ============================================================
+            // 初學者必懂 0：$(function(){ ... })
+            // - 這段意思：等 HTML 都載入完成，再開始「綁事件」
+            // - 不然可能會在元素還沒出現前就抓它，會抓不到
+            // ============================================================
+
+            // ============================================================
+            // 初學者必懂 1：flag 旗標（true / false）
+            // - 用來記錄：每個欄位是否驗證通過
+            // - blur(離開焦點) 時檢查長度，並更新 flag + Bootstrap 樣式
+            // ============================================================
+            let flag_username01 = false
+            let flag_password01 = false
+            let flag_email01 = false
+
+            let flag_username02 = false
+            let flag_password02 = false
+            let flag_email02 = false
+
+            // ============================================================
+            // 初學者必懂 2：資料陣列 foodData
+            // - 這是一個「陣列」，裡面每一筆是「物件」
+            // - 每筆物件都有 name/price/description
+            // - 我們會用它來自動生成 <option>
+            // ============================================================
+            const foodData = [
+                { name: '雞腿飯', price: 120, description: '香煎雞腿搭配白飯與當季時蔬，經典台式便當首選。' },
+                { name: '牛肉麵', price: 150, description: '紅燒湯頭濃郁，搭配燉煮入味的牛腱與Q彈麵條。' },
+                { name: '越南河粉', price: 130, description: '清爽高湯配上嫩牛肉片與新鮮香草，風味道地。' },
+                { name: '日本壽司', price: 200, description: '新鮮生魚片搭配醋飯，呈現日式經典風味。' },
+                { name: '溫蒂漢堡', price: 180, description: '多汁牛肉排搭配生菜與特製醬料，口感豐富。' },
+                { name: '排骨便當', price: 110, description: '酥炸排骨外酥內嫩，搭配經典配菜。' },
+                { name: '三杯雞', price: 160, description: '以麻油、醬油與米酒燒製，香氣濃郁下飯。' },
+                { name: '咖哩豬排飯', price: 140, description: '酥脆豬排淋上濃郁日式咖哩醬汁。' },
+                { name: '海鮮義大利麵', price: 220, description: '多種海鮮搭配蒜香橄欖油醬汁，風味清爽。' },
+                { name: '凱薩沙拉', price: 100, description: '新鮮生菜配上凱薩醬與香脆麵包丁。' },
+                { name: '韓式石鍋拌飯', price: 170, description: '多樣蔬菜與牛肉拌入辣醬，鍋巴香氣十足。' },
+                { name: '泰式打拋豬飯', price: 130, description: '香辣打拋豬搭配荷包蛋，開胃下飯。' },
+                { name: '麻婆豆腐', price: 120, description: '四川風味麻辣醬汁，豆腐滑嫩入味。' },
+                { name: '炸雞套餐', price: 190, description: '金黃酥脆炸雞搭配薯條與飲料。' },
+                { name: '培根蛋餅', price: 60, description: '酥香蛋餅包裹培根與滑嫩雞蛋。' },
+                { name: '燒肉丼', price: 150, description: '炙燒牛肉鋪滿白飯，淋上特製醬汁。' },
+                { name: '鍋燒意麵', price: 110, description: '豐富配料與濃郁湯頭，暖心暖胃。' },
+                { name: '鹽酥雞', price: 80, description: '台式經典小吃，外酥內嫩香氣十足。' },
+                { name: '蔥油餅', price: 50, description: '外酥內Q，滿滿蔥香風味。' },
+                { name: '小籠包', price: 120, description: '薄皮包裹鮮美肉餡與濃郁湯汁。' },
+                { name: '燉牛肉湯', price: 140, description: '慢火燉煮牛肉與蔬菜，湯頭鮮甜。' },
+                { name: '焗烤海鮮飯', price: 210, description: '濃郁起司焗烤搭配豐富海鮮配料。' },
+                { name: '番茄炒蛋飯', price: 90, description: '家常經典料理，酸甜開胃。' },
+                { name: '鮭魚炒飯', price: 160, description: '鮭魚丁與蛋香炒飯完美結合。' },
+                { name: '豬肉水餃', price: 100, description: '手工水餃皮薄餡多，口感紮實。' },
+                { name: '雞排漢堡', price: 130, description: '酥炸雞排夾入鬆軟麵包與新鮮生菜。' },
+                { name: '奶油白醬燉飯', price: 180, description: '濃郁奶油白醬包覆米粒，口感滑順。' },
+                { name: '酸辣湯', price: 70, description: '酸中帶辣的經典湯品，風味層次豐富。' },
+                { name: '烤鯖魚定食', price: 200, description: '鹽烤鯖魚搭配味噌湯與小菜。' },
+                { name: '抹茶鬆餅', price: 150, description: '濃郁抹茶香氣，口感鬆軟香甜。' },
+            ]
+
+            // ============================================================
+            // 主程式：把所有事件綁定放在 $(function(){}) 裡
+            // ============================================================
+            $(function () {
+                // ========================================================
+                // 1) 表單 myForm01：submit
+                // - submit 只有在按 submit 按鈕或 Enter 才觸發
+                // - 你要練習 console.log，所以先 preventDefault() 不讓它真的送出/刷新
+                // ========================================================
+                $('#myForm01').submit(function (e) {
+                    e.preventDefault() // 阻止表單預設的送出行為（避免網頁重新整理），這樣才看得到 console.log
+
+                    // Bootstrap 的驗證模式
+                    if (flag_username01 && flag_password01 && flag_email01) {
+                        console.log('form01 觸發（驗證通過）！')
+                        console.log('username01 =', $('#username01').val())
+                        console.log('password01 =', $('#password01').val())
+                        console.log('email01 =', $('#email01').val())
+                    } else {
+                        alert('欄位有錯誤，請修正！')
+                    }
+                })
+
+                // ========================================================
+                // 帳號的即時監聽：blur
+                // blur：離開焦點才檢查（初學者較好理解）
+                // - $(this) 是觸發事件的 input
+                // - .val() 取得輸入框的值；.val().length 取得文字長度
+                // - addClass/removeClass 用來切換 Bootstrap 的紅/綠框
+                // ========================================================
+                $('#username01').blur(function () {
+                    // $(this) 代表目前使用者正在操作的這個 input 欄位
+                    const len = $(this).val().length
+                    console.log('username01 長度 =', len)
+
+                    const ok = len > 1 && len < 7
+                    if (ok) {
+                        // 符合規定：移除紅框 (is-invalid)，加上綠框 (is-valid)
+                        $(this).removeClass('is-invalid').addClass('is-valid')
+                        flag_username01 = true
+                    } else {
+                        // 不符合規定：移除綠框 (is-valid)，加上紅框 (is-invalid)
+                        $(this).removeClass('is-valid').addClass('is-invalid')
+                        flag_username01 = false
+                    }
+                })
+
+                // 密碼的即時監聽
+                $('#password01').blur(function () {
+                    const len = $(this).val().length
+                    console.log('password01 長度 =', len)
+
+                    const ok = len > 1 && len < 9
+                    if (ok) {
+                        $(this).removeClass('is-invalid').addClass('is-valid')
+                        flag_password01 = true
+                    } else {
+                        $(this).removeClass('is-valid').addClass('is-invalid')
+                        flag_password01 = false
+                    }
+                })
+
+                $('#email01').blur(function () {
+                    const len = $(this).val().length
+                    console.log('email01 長度 =', len)
+
+                    const ok = len > 1 && len < 13
+                    if (ok) {
+                        $(this).removeClass('is-invalid').addClass('is-valid')
+                        flag_email01 = true
+                    } else {
+                        $(this).removeClass('is-valid').addClass('is-invalid')
+                        flag_email01 = false
+                    }
+                })
+
+                // ========================================================
+                // 2) btn02：click
+                // - 這裡不走 submit，而是按鈕 click
+                // - 同樣練習 console.log，所以不需要送出
+                // ========================================================
+                $('#btn02').click(function (e) {
+                    e.preventDefault()
+
+                    if (flag_username02 && flag_password02 && flag_email02) {
+                        console.log('btn02 觸發（驗證通過）！')
+                        console.log('username02 =', $('#username02').val())
+                        console.log('password02 =', $('#password02').val())
+                        console.log('email02 =', $('#email02').val())
+                    } else {
+                        alert('欄位有錯誤，請修正！')
+                    }
+                })
+
+                $('#username02').blur(function () {
+                    const len = $(this).val().length
+                    console.log('username02 長度 =', len)
+
+                    const ok = len > 1 && len < 7
+                    if (ok) {
+                        $(this).removeClass('is-invalid').addClass('is-valid')
+                        flag_username02 = true
+                    } else {
+                        $(this).removeClass('is-valid').addClass('is-invalid')
+                        flag_username02 = false
+                    }
+                })
+
+                $('#password02').blur(function () {
+                    const len = $(this).val().length
+                    console.log('password02 長度 =', len)
+
+                    const ok = len > 1 && len < 9
+                    if (ok) {
+                        $(this).removeClass('is-invalid').addClass('is-valid')
+                        flag_password02 = true
+                    } else {
+                        $(this).removeClass('is-valid').addClass('is-invalid')
+                        flag_password02 = false
+                    }
+                })
+
+                $('#email02').blur(function () {
+                    const len = $(this).val().length
+                    console.log('email02 長度 =', len)
+
+                    const ok = len > 1 && len < 13
+                    if (ok) {
+                        $(this).removeClass('is-invalid').addClass('is-valid')
+                        flag_email02 = true
+                    } else {
+                        $(this).removeClass('is-valid').addClass('is-invalid')
+                        flag_email02 = false
+                    }
+                })
+
+                // ========================================================
+                // 3) select：縣市 change
+                // - change 事件：當使用者選取了不同的選項時會觸發
+                // ========================================================
+                $('#myCity').change(function () {
+                    console.log('選到縣市 =', $(this).val())
+                })
+
+                // ========================================================
+                // 3) select：餐點 option 用 foodData 自動生成
+                // - empty() 清空原本的選項（避免重複累加）
+                // - append() 加入新的 HTML 內容
+                // - forEach：跑迴圈，把陣列裡的每一筆資料都拿出來做一次
+                // ========================================================
+                $('#myFood').empty()
+                $('#myFood').append('<option value="" class="text-center" disabled selected>***請選擇餐點***</option>')
+
+                foodData.forEach(function (item) {
+                    // 使用樣板字串 (反引號 `) 來組合 HTML，${item.name} 會被換成變數的值
+                    const optionHtml = `<option value="${item.name}">${item.name}</option>`
+                    $('#myFood').append(optionHtml)
+                })
+
+                // 選到餐點後：練習印出完整資料（name/price/description）
+                $('#myFood').change(function () {
+                    const name = $(this).val()
+                    // 陣列搜尋：在 foodData 裡找到 name 等於目前選取值的那個物件
+                    const item = foodData.find((x) => x.name === name)
+                    console.log('選到餐點 =', name)
+                    console.log('完整資料 =', item) // 你會看到 price / description
+                })
+
+                // ========================================================
+                // 4) range：input 事件（滑動中就會一直觸發）
+                // - range 的值一樣用 .val() 取得
+                // - 取得值之後，用 .text() 更新到畫面上的 span#num_text
+                // ========================================================
+                $('#num').on('input', function () {
+                    // 取得目前滑桿的數值
+                    const v = $(this).val()
+                    console.log($(this).val())
+                    $('#num_text').text(v)
+                })
+
+                // ========================================================
+                // 5) Datalist
+                // ========================================================
+                // 雖然 HTML 裡已經有寫死一些 option，但我們可以用 JS 把 foodData 載入進去
+                $('#foodlist').empty() // 先清空 (HTML id 是 foodlist)
+
+                foodData.forEach(function (item) {
+                    // datalist 的 option 顯示方式：value 是主要文字，標籤內可放輔助說明
+                    const optionHtml = `<option value="${item.name}">價格：${item.price}</option>`
+                    $('#foodlist').append(optionHtml)
+                })
+
+                // ========================================================
+                // 6) Checkbox (複選)：取得多個勾選值
+                // ========================================================
+
+                // 初始值設定：讓「重訓」預設為勾選狀態
+                // 語法：$("input[name='欄位名稱'][value='特定值']").prop('checked', true)
+                $("input[name='sport'][value='重訓']").prop('checked', true)
+
+                $('#btn06').click(function () {
+                    let result = [] // 準備一個空陣列，用來裝勾選的值
+
+                    // 1. 選取所有被勾選的 checkbox -> $('input[name="sport"]:checked')
+                    // 2. 使用 .each() 跑迴圈，把每一個勾選的項目抓出來處理
+                    $('input[name="sport"]:checked').each(function () {
+                        // $(this) 代表目前迴圈跑到的這一個 checkbox
+                        const val = $(this).val()
+                        console.log('勾選項目：', val)
+
+                        // 把值推入陣列
+                        result.push(val)
+                    })
+
+                    // 檢查陣列長度，如果是 0 代表沒勾選
+                    if (result.length == 0) {
+                        alert('至少選擇一個運動')
+                    } else {
+                        console.log('最終勾選名單：', result)
+                    }
+                })
+
+                // ========================================================
+                // 7) radio(單選)
+                // ========================================================
+
+                // 初始值設定：讓「大學」預設為選中
+                // Radio 的特性是同一個 name 群組只能選一個
+                $("input[name='edu'][value='大學']").prop('checked', true)
+                // 按鈕監聽
+                $('#btn07').click(function () {
+                    // 取得選中的值
+                    // 因為 Radio 是單選，所以直接用 .val() 拿被選中(:checked)的那一個即可
+                    // 不像 Checkbox 需要跑迴圈
+                    const result = $('input[name="edu"]:checked').val()
+                    console.log('學歷 =', result)
+                })
+
+                // ========================================================
+                // 8.漂浮表單
+                // ========================================================
+            })
+        </script>
+    </body>
+</html>

@@ -5,24 +5,29 @@ namespace App\Http\Controllers\Admin\News;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Str;
+
 use App\Models\News\News;
 use App\Models\News\NewsType;
+
+use App\Exports\NewsExport;
+use Maatwebsite\Excel\Facades\Excel;
 
 class AdminNewsController extends Controller
 {
     /**
-     * 最新消息列表（小超越：顯示分類名稱 + 搜尋標題）
+     * 列表（含分類名稱 + 搜尋標題）
+     * GET /admin/news/list
      */
-    public function index(Request $request)
+    public function list(Request $request)
     {
-        // ✅ 小超越：做一個簡單搜尋（只搜標題）
-        $q = trim($request->get('q', ''));
+        $q = trim((string) $request->query('q', ''));
 
         $rows = DB::table('news as a')
             ->selectRaw('a.*, b.typeName')
             ->leftJoin('news_type as b', 'a.typeId', '=', 'b.id')
             ->when($q !== '', function ($query) use ($q) {
-                // 中文注意：LIKE 搜尋標題
                 $query->where('a.title', 'like', '%' . $q . '%');
             })
             ->orderBy('a.createTime', 'desc')
@@ -32,52 +37,172 @@ class AdminNewsController extends Controller
     }
 
     /**
-     * 新增頁（需要分類下拉選單）
+     * 新增頁
+     * GET /admin/news/add
      */
-    public function create()
+    public function add()
     {
-        $types = NewsType::query()
-            ->orderBy('id', 'desc')
-            ->get();
-
+        $types = NewsType::query()->orderBy('id', 'desc')->get();
         return view('admin.news.news.create', compact('types'));
     }
 
     /**
-     * 新增送出
+     * ✅ 新增送出（穩定版：真的上傳圖片）
+     * POST /admin/news/add
      */
-    public function store(Request $request)
+    public function insert(Request $request)
     {
-        // ✅ 初學者版驗證（夠用、不複雜）
         $validated = $request->validate([
             'typeId'  => ['required', 'integer'],
             'title'   => ['required', 'string', 'max:100'],
             'content' => ['required', 'string'],
-            'photo'   => ['nullable', 'string', 'max:30'], // 先當作「檔名」欄位，不做上傳
+            'photo'   => ['nullable', 'image', 'max:5120'], // 5MB
         ], [
             'typeId.required'  => '請選擇分類',
             'title.required'   => '請輸入標題',
             'content.required' => '請輸入內容',
+            'photo.image'      => '圖片格式不正確（請上傳 jpg/png/webp 等）',
         ]);
 
-        // ✅ createTime 你資料表有預設 current_timestamp()，其實可以不用塞
-        News::create([
-            'typeId'   => $validated['typeId'],
-            'title'    => $validated['title'],
-            'content'  => $validated['content'],
-            'photo'    => $validated['photo'] ?? '',
-            // 'createTime' => now(), // 不塞也行（DB會自動給）
-        ]);
+        // 內容：編輯方便的換行 -> 存 DB 時統一用 <br/>
+        $content = str_replace(["\r\n", "\r", "\n"], "<br/>", (string) $validated['content']);
 
-        return redirect()->route('admin.news.index')->with('success', '新增成功');
+        // 圖片：預設空字串（代表沒上傳）
+        $fileName = '';
+
+        if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+            $dir = public_path('images/news');
+            if (!is_dir($dir)) {
+                mkdir($dir, 0777, true);
+            }
+
+            $photo = $request->file('photo');
+            $ext = strtolower($photo->getClientOriginalExtension());
+            if ($ext === '') $ext = 'jpg';
+
+            $fileName = date('Ymd_His') . '_' . Str::random(6) . '.' . $ext;
+            $photo->move($dir, $fileName);
+        }
+
+        $news = new News();
+        $news->typeId  = (int) $validated['typeId'];
+        $news->title   = (string) $validated['title'];
+        $news->content = $content;
+        $news->photo   = $fileName; // ✅ DB 只存「檔名」
+        $news->save();
+
+        Session::flash('message', '已新增');
+        return redirect('/admin/news/list');
     }
 
     /**
-     * 刪除（先做硬刪，保持簡單）
+     * 編輯頁
+     * GET /admin/news/edit/{id}
      */
-    public function destroy($id)
+    public function edit($id)
     {
-        News::where('id', $id)->delete();
-        return redirect()->route('admin.news.index')->with('success', '刪除成功');
+        $news = News::find($id);
+        $types = NewsType::query()->orderBy('id', 'desc')->get();
+        return view('admin.news.news.edit', compact('news', 'types'));
+    }
+
+    /**
+     * ✅ 更新送出（穩定版：可換圖、沒換圖保留舊圖、刪舊圖安全）
+     * POST /admin/news/edit
+     */
+    public function update(Request $request)
+    {
+        $validated = $request->validate([
+            'id'        => ['required', 'integer'],
+            'typeId'    => ['required', 'integer'],
+            'title'     => ['required', 'string', 'max:100'],
+            'content'   => ['required', 'string'],
+            'photo_old' => ['nullable', 'string', 'max:255'],
+            'photo'     => ['nullable', 'image', 'max:5120'],
+        ]);
+
+        $news = News::find($validated['id']);
+        if (!$news) {
+            Session::flash('message', '找不到資料');
+            return redirect('/admin/news/list');
+        }
+
+        $content = str_replace(["\r\n", "\r", "\n"], "<br/>", (string) $validated['content']);
+
+        $news->typeId  = (int) $validated['typeId'];
+        $news->title   = (string) $validated['title'];
+        $news->content = $content;
+
+        // 先預設保留舊圖（避免沒上傳就把 photo 清空）
+        $fileName = (string) ($validated['photo_old'] ?? $news->photo ?? '');
+
+        // 有新圖才換
+        if ($request->hasFile('photo') && $request->file('photo')->isValid()) {
+            $dir = public_path('images/news');
+            if (!is_dir($dir)) {
+                mkdir($dir, 0777, true);
+            }
+
+            $photo = $request->file('photo');
+            $ext = strtolower($photo->getClientOriginalExtension());
+            if ($ext === '') $ext = 'jpg';
+
+            $newFileName = date('Ymd_His') . '_' . Str::random(6) . '.' . $ext;
+            $photo->move($dir, $newFileName);
+
+            // 刪舊圖（安全：先檢查存在）
+            if (!empty($news->photo)) {
+                $oldPath = public_path('images/news/' . $news->photo);
+                if (is_file($oldPath)) {
+                    unlink($oldPath);
+                }
+            }
+
+            $fileName = $newFileName;
+        }
+
+        $news->photo = $fileName;
+        $news->save();
+
+        Session::flash('message', '已修改');
+        return redirect('/admin/news/list');
+    }
+
+    /**
+     * ✅ 批次刪除（勾選 id[]）
+     * POST /admin/news/delete
+     */
+    public function delete(Request $request)
+    {
+        // ✅ 對應 list.blade：name="id[]"
+        $ids = $request->input('id', []);
+        if (!is_array($ids)) $ids = [$ids];
+
+        foreach ($ids as $id) {
+            $news = News::find($id);
+            if (!$news) continue;
+
+            // 刪圖片（安全）
+            if (!empty($news->photo)) {
+                $path = public_path('images/news/' . $news->photo);
+                if (is_file($path)) {
+                    unlink($path);
+                }
+            }
+
+            $news->delete();
+        }
+
+        Session::flash('message', '已刪除');
+        return redirect('/admin/news/list');
+    }
+
+    /**
+     * 匯出 Excel
+     * GET /admin/news/export
+     */
+    public function export()
+    {
+        return Excel::download(new NewsExport, '最新消息.xlsx');
     }
 }

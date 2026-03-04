@@ -4,7 +4,6 @@
 @section('content')
     <h2 style="margin:0 0 12px;">新增最新消息</h2>
 
-    {{-- 顯示驗證錯誤 --}}
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul style="margin:0;">
@@ -15,7 +14,8 @@
         </div>
     @endif
 
-    <form method="POST" action="{{ route('admin.news.store') }}">
+    {{-- ✅ 重要：要上傳檔案一定要 enctype --}}
+    <form method="POST" action="/admin/news/add" enctype="multipart/form-data">
         @csrf
 
         <div style="margin-bottom:10px;">
@@ -40,12 +40,14 @@
         </div>
 
         <div style="margin-bottom:10px;">
-            <label>圖片（先填檔名即可）</label><br>
-            <input type="text" name="photo" value="{{ old('photo') }}" style="width:260px; padding:6px;"
-                maxlength="30">
+            <label>圖片（可不選）</label><br>
+            <input type="file" name="photo" accept="image/*">
+            <div style="font-size:12px; opacity:.75; margin-top:4px;">
+                圖片會存到：public/images/news/；資料庫只存檔名（Excel 插圖會用這個檔名找檔案）。
+            </div>
         </div>
 
         <button class="btn btn-primary">送出</button>
-        <a class="btn btn-secondary" href="{{ route('admin.news.index') }}">返回</a>
+        <a class="btn btn-secondary" href="/admin/news/list">返回</a>
     </form>
 @endsection

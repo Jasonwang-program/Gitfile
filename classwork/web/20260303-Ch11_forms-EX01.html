@@ -1,0 +1,367 @@
+<!doctype html>
+<html lang="zh-TW">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Ch11. forms-EX01｜飲料訂購</title>
+
+        <!-- CSS 引用 -->
+        <link rel="stylesheet" href="../css/bootstrap.min.css" />
+        <link rel="stylesheet" href="../css/01_tokens.css" />
+        <link rel="stylesheet" href="../css/02_typography.css" />
+        <link rel="stylesheet" href="../css/03_components.css" />
+        <link rel="stylesheet" href="../css/04_layout.css" />
+
+        <!-- 小補強：一點點專屬樣式（不改原本的 tokens 架構） -->
+        <style>
+            .hero-pill {
+                border-radius: 999px;
+                background: linear-gradient(180deg, #2f6b50, #22543f);
+                box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+            }
+            .hero-title {
+                display: inline-block;
+                padding: 10px 18px;
+                border-radius: 12px;
+                background: rgba(15, 23, 42, 0.45);
+                color: #fff;
+                font-weight: 900;
+                letter-spacing: 2px;
+                text-shadow: 0 2px 10px rgba(0, 0, 0, 0.25);
+            }
+            .price-badge {
+                font-weight: 900;
+            }
+            .muted {
+                opacity: 0.75;
+            }
+            .form-section-title {
+                font-weight: 900;
+                margin-bottom: 8px;
+            }
+        </style>
+    </head>
+
+    <body>
+        <div class="container py-5">
+            <!-- Header / Title -->
+            <div class="hero-pill p-4 mb-4 text-center">
+                <div class="hero-title display-6">飲料訂購</div>
+            </div>
+
+            <div class="row justify-content-center">
+                <div class="col-12 col-lg-9 col-xl-8">
+                    <div class="card border-0 shadow-sm">
+                        <div class="card-body p-4 p-md-5">
+                            <!-- =========================================================
+                                表單：示範「不真的送出」，用 JS 接管 submit 做 console.log
+                                needs-validation + novalidate：搭配 Bootstrap 驗證樣式
+                                ========================================================= -->
+                            <form id="orderForm" class="needs-validation" novalidate>
+                                <!-- 訂購者 -->
+                                <div class="mb-3">
+                                    <label for="customerName" class="form-label">訂購者名稱（2~5字）</label>
+                                    <input
+                                        id="customerName"
+                                        name="customerName"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="例如：小明"
+                                        minlength="2"
+                                        maxlength="5"
+                                        required
+                                    />
+                                    <div class="invalid-feedback">請輸入 2~5 個字。</div>
+                                </div>
+
+                                <!-- 飲品名稱 -->
+                                <div class="mb-3">
+                                    <label for="drinkName" class="form-label">商品名稱（2~6字）</label>
+                                    <input
+                                        id="drinkName"
+                                        name="drinkName"
+                                        type="text"
+                                        class="form-control"
+                                        placeholder="例如：珍奶"
+                                        minlength="2"
+                                        maxlength="6"
+                                        required
+                                    />
+                                    <div class="invalid-feedback">請輸入 2~6 個字。</div>
+                                </div>
+
+                                <!-- 冰塊 -->
+                                <div class="mb-3">
+                                    <label for="iceLevel" class="form-label">冰塊</label>
+                                    <select id="iceLevel" name="iceLevel" class="form-select" required>
+                                        <option value="" selected disabled>--請選擇冰塊--</option>
+                                        <option value="正常冰">正常冰</option>
+                                        <option value="少冰">少冰</option>
+                                        <option value="微冰">微冰</option>
+                                        <option value="去冰">去冰</option>
+                                        <option value="熱">熱</option>
+                                    </select>
+                                    <div class="invalid-feedback">請選擇冰塊。</div>
+                                </div>
+
+                                <!-- 單點配料 -->
+                                <div class="mb-3">
+                                    <div class="form-section-title">單點配料（可複選）</div>
+                                    <div class="row g-2">
+                                        <!--
+                                        data-addon：這個配料要加多少錢（用 JS 算總價）
+                                        -->
+                                        <div class="col-6 col-md-3">
+                                            <div class="form-check">
+                                                <input
+                                                    class="form-check-input addon"
+                                                    type="checkbox"
+                                                    id="addonPearl"
+                                                    value="粉圓"
+                                                    data-addon="10"
+                                                />
+                                                <label class="form-check-label" for="addonPearl">粉圓 +10</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <div class="form-check">
+                                                <input
+                                                    class="form-check-input addon"
+                                                    type="checkbox"
+                                                    id="addonCoco"
+                                                    value="QQ"
+                                                    data-addon="10"
+                                                />
+                                                <label class="form-check-label" for="addonCoco">QQ +10</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <div class="form-check">
+                                                <input
+                                                    class="form-check-input addon"
+                                                    type="checkbox"
+                                                    id="addonRedbean"
+                                                    value="紅豆"
+                                                    data-addon="15"
+                                                />
+                                                <label class="form-check-label" for="addonRedbean">紅豆 +15</label>
+                                            </div>
+                                        </div>
+                                        <div class="col-6 col-md-3">
+                                            <div class="form-check">
+                                                <input
+                                                    class="form-check-input addon"
+                                                    type="checkbox"
+                                                    id="addonGreenbean"
+                                                    value="綠豆"
+                                                    data-addon="15"
+                                                />
+                                                <label class="form-check-label" for="addonGreenbean">綠豆 +15</label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="form-text muted">配料會影響總價（下方會即時計算）。</div>
+                                </div>
+
+                                <!-- 數量：range -->
+                                <div class="mb-3">
+                                    <label for="qty" class="form-label"
+                                        >數量：<span id="qtyText" class="text-primary price-badge">1</span> 杯</label
+                                    >
+                                    <input
+                                        id="qty"
+                                        name="qty"
+                                        type="range"
+                                        class="form-range"
+                                        min="1"
+                                        max="10"
+                                        value="1"
+                                    />
+                                </div>
+
+                                <!-- 甜度：range (0~100%) -->
+                                <div class="mb-3">
+                                    <label for="sugar" class="form-label"
+                                        >甜度：<span id="sugarText" class="text-primary price-badge">50</span>%</label
+                                    >
+                                    <input
+                                        id="sugar"
+                                        name="sugar"
+                                        type="range"
+                                        class="form-range"
+                                        min="0"
+                                        max="100"
+                                        value="50"
+                                        step="10"
+                                    />
+                                    <div class="form-text muted">0=無糖、50=半糖、100=全糖（每 10% 一格）。</div>
+                                </div>
+
+                                <!-- 備註 -->
+                                <div class="mb-3">
+                                    <label for="note" class="form-label">備註（2~10字，可不填）</label>
+                                    <input
+                                        id="note"
+                                        name="note"
+                                        type="text"
+                                        class="form-control"
+                                        minlength="2"
+                                        maxlength="10"
+                                        placeholder="例如：不要吸管"
+                                    />
+                                    <div class="form-text muted">不填也可以，但如果填了請至少 2 字。</div>
+                                </div>
+
+                                <!-- 價格顯示 -->
+                                <div class="border rounded-3 p-3 mb-3">
+                                    <!-- 基本單價你可以改這裡 -->
+                                    <div class="d-flex flex-wrap gap-3 align-items-center">
+                                        <div class="muted">
+                                            單價：<span id="basePriceText" class="text-warning price-badge">50</span> 元
+                                        </div>
+                                        <div class="muted">
+                                            配料：<span id="addonPriceText" class="text-warning price-badge">0</span> 元
+                                        </div>
+                                        <div class="ms-auto">
+                                            <span class="text-danger price-badge"
+                                                >總價：<span id="totalText">50</span> 元</span
+                                            >
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- Buttons -->
+                                <div class="d-flex gap-2">
+                                    <button type="reset" class="btn btn-secondary">取消</button>
+                                    <button type="submit" class="btn btn-primary">送出</button>
+                                </div>
+
+                                <div class="mt-3 muted small">
+                                    提示：送出後不會真的送到後端，會把資料印在 console（F12）讓你練習。
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- JS：建議放在 body 最底下（DOM 已經載入完成） -->
+        <script src="../js/bootstrap.bundle.min.js"></script>
+        <script src="../js/jquery-4.0.0.js"></script>
+
+        <script>
+            // =========================
+            // 1) 取得 DOM
+            // =========================
+            const form = document.getElementById('orderForm')
+
+            const qty = document.getElementById('qty')
+            const qtyText = document.getElementById('qtyText')
+
+            const sugar = document.getElementById('sugar')
+            const sugarText = document.getElementById('sugarText')
+
+            const addonCheckboxes = document.querySelectorAll('.addon')
+
+            const basePriceText = document.getElementById('basePriceText')
+            const addonPriceText = document.getElementById('addonPriceText')
+            const totalText = document.getElementById('totalText')
+
+            // 基本單價：你想改就改這裡（例如 60）
+            const BASE_PRICE = 50
+
+            // =========================
+            // 2) 計算總價（核心）
+            // =========================
+            function calcAddonPrice() {
+                let addon = 0
+                addonCheckboxes.forEach((chk) => {
+                    if (chk.checked) addon += Number(chk.dataset.addon || 0)
+                })
+                return addon
+            }
+
+            function updatePriceUI() {
+                const addon = calcAddonPrice()
+                const q = Number(qty.value)
+
+                const total = (BASE_PRICE + addon) * q
+
+                basePriceText.textContent = BASE_PRICE
+                addonPriceText.textContent = addon
+                totalText.textContent = total
+            }
+
+            // =========================
+            // 3) 互動：range 變動就更新文字與價格
+            // =========================
+            qty.addEventListener('input', () => {
+                qtyText.textContent = qty.value
+                updatePriceUI()
+            })
+
+            sugar.addEventListener('input', () => {
+                sugarText.textContent = sugar.value
+            })
+
+            addonCheckboxes.forEach((chk) => {
+                chk.addEventListener('change', updatePriceUI)
+            })
+
+            // reset 也要把 UI 還原（例如總價）
+            form.addEventListener('reset', () => {
+                // reset 事件觸發時，表單值還沒完全回復，所以用 setTimeout 延後一個 tick
+                setTimeout(() => {
+                    qtyText.textContent = qty.value
+                    sugarText.textContent = sugar.value
+                    updatePriceUI()
+                    form.classList.remove('was-validated')
+                }, 0)
+            })
+
+            // =========================
+            // 4) Submit：Bootstrap 驗證 + console.log 練習
+            // =========================
+            form.addEventListener('submit', (e) => {
+                e.preventDefault() // 重要：不真的送出
+
+                // 觸發 Bootstrap 驗證外觀
+                form.classList.add('was-validated')
+
+                // 如果驗證不通過，直接停止
+                if (!form.checkValidity()) {
+                    console.log('❌ 表單未通過驗證')
+                    return
+                }
+
+                // 收集資料（示範：初學者看得懂的方式）
+                const selectedAddons = []
+                addonCheckboxes.forEach((chk) => {
+                    if (chk.checked) selectedAddons.push(chk.value)
+                })
+
+                const data = {
+                    customerName: document.getElementById('customerName').value.trim(),
+                    drinkName: document.getElementById('drinkName').value.trim(),
+                    iceLevel: document.getElementById('iceLevel').value,
+                    addons: selectedAddons,
+                    qty: Number(qty.value),
+                    sugar: Number(sugar.value),
+                    note: document.getElementById('note').value.trim(),
+                    basePrice: BASE_PRICE,
+                    addonPrice: calcAddonPrice(),
+                    total: Number(totalText.textContent),
+                }
+
+                console.log('✅ 訂單資料（可拿去串後端）', data)
+                alert('已送出（示範：資料已印到 Console）')
+            })
+
+            // 初始 UI
+            qtyText.textContent = qty.value
+            sugarText.textContent = sugar.value
+            updatePriceUI()
+        </script>
+    </body>
+</html>

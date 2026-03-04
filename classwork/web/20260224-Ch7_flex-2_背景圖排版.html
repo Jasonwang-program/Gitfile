@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="zh-TW">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>背景圖排版</title>
+        <link rel="stylesheet" href="../css/bootstrap.min.css" />
+        <link rel="stylesheet" href="../css/01_tokens.css" />
+        <link rel="stylesheet" href="../css/02_typography.css" />
+        <link rel="stylesheet" href="../css/03_components.css" />
+        <link rel="stylesheet" href="../css/04_layout.css" />
+        <style>
+            .bg-conver {
+                background-size: cover;
+                background-position: center center;
+            }
+        </style>
+    </head>
+    <script src="../js/bootstrap.bundle.min.js"></script>
+    <body>
+        <div class="container-fluid">
+            <!-- 導覽列 -->
+            <div class="bg-light">
+                <div class="d-flex">
+                    <!-- 左邊的文字LOGO介紹 -->
+                    <div>
+                        <div class="h4 fw-900">景點導覽</div>
+                        <div class="small text-secondary">
+                            <div>在地預約平台 | 手作 | 親子 | 解謎</div>
+                        </div>
+                        <!-- 右邊的相關按鈕選單 -->
+                        <div>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">熱門體驗</a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">方案價格</a>
+                            <a href="#" class="btn btn-outline-secondary btn-sm">客戶評價</a>
+                            <a href="#" class="btn btn-primary btn-sm">立即報名</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- 第一列 -->
+            <div class="row g-3">
+                <div
+                    class="col-md-4 bg-conver"
+                    style="
+                        background-image: url('../images/1600x900/picsum_id100_Tina\ Rataj_1600x900.jpg');
+                        height: 220px;
+                    "
+                ></div>
+                <div
+                    class="col-md-4 bg-conver"
+                    style="
+                        background-image: url('../images/1600x900/picsum_id134_Charlie\ Foster_1600x900.jpg');
+                        height: 220px;
+                    "
+                ></div>
+                <div
+                    class="col-md-4 bg-conver"
+                    style="
+                        background-image: url('../images/1600x900/picsum_id96_Pawel\ Kadysz_1600x900.jpg');
+                        height: 220px;
+                    "
+                ></div>
+            </div>
+
+            <div class="row vh-100">
+                <div
+                    class="col-md-8 bg-cover"
+                    style="background-image: url('../images/1600x900/picsum_id9_Alejandro\ Escamilla_1600x900.jpg')"
+                ></div>
+                <div class="col-md-4">
+                    <div class="d-flex flex-column h-100 row">
+                        <div
+                            class="h-50 h-100"
+                            style="
+                                background-image: url('../images/1600x900/picsum_id153_Charlie\ Foster_1600x900.jpg');
+                            "
+                        ></div>
+                        <div
+                            class="h-50 h-100"
+                            style="background-image: url('../images/1600x900/picsum_id189_Buzo\ Jesús_1600x900.jpg')"
+                        ></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </body>
+</html>
